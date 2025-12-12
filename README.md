@@ -1,67 +1,211 @@
-# Portal de Notícias — Projeto
+📰 Portal de Notícias — Laravel CMS Minimalista
 
-Este repositório contém um portal de notícias minimalista customizado. O foco principal do projeto é fornecer:
+Um portal de notícias minimalista desenvolvido em Laravel, com páginas totalmente editáveis, shortcodes, menu dinâmico, footer automatizado e painel administrativo simples para gerenciamento de conteúdo.
 
-- Um painel administrativo simples para gerir conteúdo (artigos e páginas) com CRUD completo.
-- Páginas dinâmicas configuráveis pelo admin que suportam componentes embutidos (shortcodes) como formulários, blocos de contato e mapas.
-- Um sistema de `Settings` para armazenar informações do negócio (telefone, email, mapa, horários, redes sociais) que podem ser exibidas em páginas e no rodapé.
-- Interface frontend responsiva baseada em Bootstrap com um layout de página reutilizável e componentes para blocos comuns.
+O projeto foi criado para quem precisa de um CMS leve, fácil de personalizar e com estrutura clara para evoluir.
 
-## Principais funcionalidades
+✨ Recursos principais
+📝 Páginas dinâmicas com CRUD completo
 
-- **CRUD de Páginas via Admin**
-	- Criar/Editar/Remover páginas em `/admin/pages`.
-	- Campos especiais: `show_in_menu` (exibir no menu) e `hide_business_info` (ocultar seção de contato nessa página).
+Criar, editar e excluir páginas via /admin/pages
 
-- **Shortcodes / Componentes de Página**
-	- `[[contact_form]]` — insere o formulário de contato (envia para a rota `contact.send`).
-	- `[[business_info]]` — exibe dados do `Settings` (email, telefone, endereço, horários).
-	- `[[map]]` — renderiza o embed do mapa salvo em `Settings`.
+Campos especiais:
 
-- **Menu e Footer dinâmicos**
-	- O menu principal e o footer listam automaticamente as páginas com `show_in_menu = true`.
+show_in_menu → Exibir no menu principal
 
-- **Sistema de Settings**
-	- Em `admin/settings` é possível configurar cores, logo, e informações do negócio (telefone, email, endereço, horário, mapa embed, redes sociais, FAQ de contato).
+hide_business_info → Ocultar seção de informações da empresa na página
 
-## Arquitetura e pontos técnicos
+Upload de thumbnail, vídeo e conteúdo em HTML/RichText
 
-- `Page` (model): armazena `slug`, `title`, `content` e campos auxiliares (`thumbnail`, `video_url`, `show_in_menu`, `hide_business_info`).
-- `Page::renderContent()` processa shortcodes básicos substituindo por partials Blade (components em `resources/views/page-components`).
-- Rotas públicas:
-	- A aplicação inclui uma rota fallback `/{slug}` que renderiza páginas pelo `slug` (última rota registrada para evitar conflitos com rotas explícitas).
+🧩 Shortcodes embutidos
 
-## Como usar as páginas no Admin (exemplo rápido)
+O conteúdo das páginas suporta blocos dinâmicos via shortcodes:
 
-1. Acesse `/admin/pages` e clique em "Criar Página".
-2. Preencha `slug` (ex: `ebook`), `title`, `content` e marque `Exibir no menu` para que apareça no nav.
-3. Se quiser ocultar a seção de contato/empresa nessa página (ex.: landing de ebook), marque `Ocultar informações de contato`.
-4. No conteúdo da página, use shortcodes conforme necessário (por exemplo coloque `[[contact_form]]` para mostrar formulário).
+Shortcode	Função
+[[contact_form]]	Exibe o formulário de contato
+[[business_info]]	Informações do negócio configuráveis no admin
+[[map]]	Mapa embed configurado no painel
+⚙️ Sistema de Settings (Configurações globais)
 
-## Boas práticas e dicas de conteúdo
+Em /admin/settings é possível configurar:
 
-- Use `slug` curto e sem espaços (ex.: `ebook`, `about`).
-- Para conteúdo complexo, combine HTML com os shortcodes; imagens enviadas via admin são salvas em `storage/pages`.
-- Controle a visibilidade de páginas no menu com `show_in_menu` para evitar exibir páginas de teste.
+Email, telefone, endereço
 
-## Arquivos chave (onde procurar funcionalidades)
+Cores do site e logo
 
-- `app/Models/Page.php` — model e `renderContent()`.
-- `app/Http/Controllers/AdminController.php` — lógicas de CRUD para páginas.
-- `resources/views/page-components/` — partials: `contact_form`, `business_info`, `map`.
-- `resources/views/layouts/app.blade.php` — header / menu / footer.
-- `routes/web.php` — rotas públicas e admin.
+Horários de funcionamento
 
-## Publicar no GitHub
+Embed do Google Maps
 
-Se quiser publicar este projeto, basta commitar e subir para seu repositório remoto. Exemplo rápido:
-```bash
-git add .
-git commit -m "Portal de Notícias - projeto"
-git remote add origin git@github.com:SEU_USUARIO/portal-de-noticias.git
-git push -u origin main
-```
+Redes sociais
 
-Se quiser, posso gerar um workflow GitHub Actions básico para rodar testes automaticamente no push.
+FAQs e blocos de contato
 
-Quer que eu ajuste alguma seção do README com exemplos reais do seu conteúdo (ex.: texto do ebook, imagens sugeridas, ou uma demo de shortcodes)?
+🧭 Menu e Footer automáticos
+
+O menu principal lista páginas com show_in_menu = true
+
+Footer renderiza informações do Settings + páginas relevantes
+
+📦 Arquitetura simples e extensível
+
+Page model central para renderizar conteúdo
+
+Rotas públicas automáticas via fallback: /{slug}
+
+Componentes Blade organizados em resources/views/page-components/
+
+🚀 Instalação
+1️⃣ Clonar o repositório
+git clone https://github.com/haasdev33/portal-de-noticia.git
+cd portal-de-noticia
+
+2️⃣ Instalar dependências
+composer install
+npm install && npm run build
+
+3️⃣ Configurar o .env
+cp .env.example .env
+php artisan key:generate
+
+
+Configurar banco de dados:
+
+DB_DATABASE=portal
+DB_USERNAME=root
+DB_PASSWORD=
+
+4️⃣ Migrar tabelas
+php artisan migrate --seed
+
+
+O seed cria um admin padrão:
+
+Email: admin@example.com
+
+Senha: password
+(Edite conforme necessário no DatabaseSeeder)
+
+5️⃣ Ativar storage
+php artisan storage:link
+
+6️⃣ Iniciar o servidor
+php artisan serve
+
+🗂️ Estrutura — Pastas e arquivos importantes
+Arquivo/Pasta	Função
+app/Models/Page.php	Model de página e sistema de shortcodes
+app/Http/Controllers/AdminController.php	Gerenciamento de páginas e settings
+resources/views/layouts/app.blade.php	Layout principal (menu e footer dinâmicos)
+resources/views/page-components/	Partials dos shortcodes
+routes/web.php	Rotas públicas + fallback para páginas
+🧩 Como usar páginas no Admin
+
+Acesse /admin/pages
+
+Clique em Criar Página
+
+Preencha:
+
+slug (ex.: sobre, ebook, noticias)
+
+title
+
+content (HTML + shortcodes)
+
+Marque:
+
+Exibir no menu → adiciona ao menu automático
+
+Ocultar informações da empresa → remove bloco de contato
+
+Salve e acesse no navegador:
+
+/{slug}
+
+🔧 Como usar os Shortcodes
+
+Dentro do editor de conteúdo:
+
+Formulário de contato
+[[contact_form]]
+
+Dados da empresa (settings)
+[[business_info]]
+
+Mapa configurável
+[[map]]
+
+
+Eles serão automaticamente substituídos por componentes Blade.
+
+🛠️ Personalização
+Modificar layout
+
+Edite:
+
+resources/views/layouts/app.blade.php
+
+Criar novos componentes de shortcode
+
+Crie um Blade em:
+
+resources/views/page-components/novo_componente.blade.php
+
+
+E adicione suporte em Page::renderContent().
+
+🔒 Autenticação e painel admin
+
+O painel fica em:
+
+/admin
+
+
+Com autenticação padrão do Laravel.
+
+A partir daqui você consegue gerenciar:
+
+Páginas
+
+Configurações
+
+Conteúdos dinâmicos
+
+📸 Screenshots (opcional)
+
+Recomendo adicionar prints como:
+
+Painel admin
+
+Página de criação de conteúdo
+
+Exemplo de shortcode funcionando
+
+Layout frontend
+
+Você pode adicionar assim:
+
+![Admin](screenshots/admin.png)
+
+🤝 Contribuição
+
+Pull requests são bem-vindos.
+Siga este fluxo:
+
+Crie uma branch:
+
+git checkout -b feature/minha-feature
+
+
+Commit:
+
+git commit -m "Adiciona nova feature"
+
+
+Push:
+
+git push origin feature/minha-feature
+
+
+Abra um PR no GitHub.
